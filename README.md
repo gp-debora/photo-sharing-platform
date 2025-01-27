@@ -54,36 +54,17 @@ npm run dev
 Acesse o frontend no navegador:
 http://localhost:5173/
 
-# Estrutura do Projeto 📂
+# Tecnologias Utilizadas 💻
+Backend:
 
-photo-sharing-platform/
-├── backend/
-│   ├── models/
-│   │   ├── group.js
-│   │   ├── share.js
-│   │   ├── gallery.js
-│   ├── routes/
-│   │   ├── groupRoutes.js
-│   │   ├── shareRoutes.js
-│   │   ├── galleryRoutes.js
-│   ├── index.js
-│   ├── .env
-├── frontend/
-│   ├── public/
-│   │   ├── index.html
-│   │   ├── grupos.html
-│   │   ├── partilha.html
-│   │   ├── galeria.html
-│   ├── src/
-│   │   ├── scripts/
-│   │   │   ├── grupos.js
-│   │   │   ├── partilha.js
-│   │   │   ├── galeria.js
-│   ├── styles/
-│   │   ├── index-style.css
-│   │   ├── grupos-style.css
-│   │   ├── partilha-style.css
-│   │   ├── galeria-style.css
+Node.js
+Express.js
+MongoDB
+JWT (JSON Web Tokens)
+Frontend:
+
+HTML5, CSS3, JavaScript
+Framework: Vite.js
 
 # Testar as APIs no Postman 📬
 Registo:
