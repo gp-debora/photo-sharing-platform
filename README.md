@@ -1,7 +1,8 @@
-Plataforma de Partilha de Fotografias 📸
+# Plataforma de Partilha de Fotografias 📸
+
 Este é um projeto de uma plataforma onde fotógrafos podem se conectar, criar grupos, compartilhar informações sobre sessões fotográficas e criar galerias de imagens.
 
-Funcionalidades 🛠️
+# Funcionalidades 🛠️
 
 Grupos:
 Criação de grupos com nome, descrição, local e data.
@@ -16,7 +17,7 @@ Upload de imagens com descrição para a galeria.
 Autenticação:
 Registo e login de utilizadores com autenticação baseada em tokens JWT.
 
-Como Rodar o Projeto 🚀
+# Como Rodar o Projeto 🚀
 
 Pré-requisitos
 Node.js
@@ -53,7 +54,7 @@ npm run dev
 Acesse o frontend no navegador:
 http://localhost:5173/
 
-Estrutura do Projeto 📂
+# Estrutura do Projeto 📂
 
 photo-sharing-platform/
 ├── backend/
@@ -84,7 +85,7 @@ photo-sharing-platform/
 │   │   ├── partilha-style.css
 │   │   ├── galeria-style.css
 
-Testar as APIs no Postman 📬
+# Testar as APIs no Postman 📬
 Registo:
 
 Endpoint: POST /api/auth/register
@@ -155,12 +156,12 @@ json
   "description": "Descrição da imagem."
 }
 
-Melhorias Futuras 🚀
+# Melhorias Futuras 🚀
 Adicionar feedback visual para sucesso ou erro no frontend.
 Implementar funcionalidade de edição e exclusão para grupos, partilhas e galerias.
 Melhorar o design responsivo para dispositivos móveis.
 
-Autora ✨
+# Autora ✨
 Desenvolvido por Débora Gonçalves, 27983, SIR, .
 
 
