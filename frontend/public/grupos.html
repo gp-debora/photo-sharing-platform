@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grupos Fotográficos</title>
+  <link rel="stylesheet" href="styles/grupos-style.css">
+</head>
+<body>
+  <header>
+    <h1>Grupos Fotográficos</h1>
+    <nav>
+      <button class="voltar" onclick="window.location.href='index.html'">Voltar</button>
+      <button class="logout" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+  <main>
+    <h2>Explore Grupos</h2>
+    <div id="group-list" class="group-list">
+      <!-- Grupos carregados dinamicamente -->
+    </div>
+    <button id="create-group-btn" onclick="showCreateGroupForm()">Criar Grupo</button>
+    <div id="create-group-form" style="display: none;">
+      <h3>Criar Novo Grupo</h3>
+      <input type="text" id="group-name" placeholder="Nome do Grupo" required />
+      <input type="text" id="group-description" placeholder="Descrição" required />
+      <input type="text" id="group-location" placeholder="Localização" required />
+      <input type="date" id="group-date" required />
+      <button onclick="createGroup()">Salvar</button>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 Plataforma de Partilha de Fotografias</p>
+  </footer>
+  <script src="./tokenValidation.js"></script>
+  <script>
+    async function fetchGroups() {
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        alert('Por favor, faça login para acessar os grupos.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5001/api/groups', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) throw new Error('Erro ao carregar grupos.');
+
+        const groups = await response.json();
+        const groupList = document.getElementById('group-list');
+        groupList.innerHTML = ''; 
+
+        groups.forEach((group) => {
+          const groupItem = document.createElement('div');
+          groupItem.className = 'group-item';
+          groupItem.innerHTML = `
+            <h3>${group.name}</h3>
+            <p>${group.description}</p>
+            <p><strong>Local:</strong> ${group.location}</p>
+            <p><strong>Data:</strong> ${new Date(group.date).toLocaleDateString()}</p>
+          `;
+          groupList.appendChild(groupItem);
+        });
+      } catch (error) {
+        console.error(error);
+        alert('Não foi possível carregar os grupos.');
+      }
+    }
+
+    // Função para carregar grupos dinamicamente
+    async function fetchGroups() {
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        alert('Por favor, faça login para acessar os grupos.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('API_BASE_URL', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao carregar grupos.');
+        }
+
+        const groups = await response.json();
+        const groupList = document.getElementById('group-list');
+        groupList.innerHTML = ''; 
+
+        groups.forEach(group => {
+          const groupItem = document.createElement('div');
+          groupItem.className = 'group-item';
+          groupItem.innerHTML = `
+            <h3>${group.name}</h3>
+            <p>${group.description}</p>
+            <p><strong>Local:</strong> ${group.location}</p>
+            <p><strong>Data:</strong> ${new Date(group.date).toLocaleDateString()}</p>
+          `;
+          groupList.appendChild(groupItem);
+        });
+      } catch (error) {
+        console.error(error);
+        alert('Não foi possível carregar os grupos.');
+      }
+    }
+
+    // Função para exibir o formulário de criação de grupo
+    function showCreateGroupForm() {
+      document.getElementById('create-group-form').style.display = 'block';
+    }
+
+    // Função para criar um novo grupo
+    async function createGroup() {
+      const name = document.getElementById('group-name').value;
+      const description = document.getElementById('group-description').value;
+      const location = document.getElementById('group-location').value;
+      const date = document.getElementById('group-date').value;
+      const token = localStorage.getItem('userToken');
+
+      try {
+        const response = await fetch('http://localhost:5001/api/groups', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name, description, location, date }),
+        });
+
+        if (response.ok) {
+          alert('Grupo criado com sucesso!');
+          window.location.reload();
+        } else {
+          const error = await response.json();
+          alert(`Erro ao criar grupo: ${error.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao criar grupo.');
+      }
+    }
+
+    // Função para logout
+    function logout() {
+      localStorage.removeItem('userToken'); 
+      alert('Você saiu da aplicação!');
+      window.location.href = 'login.html';
+    }
+
+    // Carregar grupos ao carregar a página
+    document.addEventListener('DOMContentLoaded', fetchGroups);
+  </script>
+</body>
+</html>

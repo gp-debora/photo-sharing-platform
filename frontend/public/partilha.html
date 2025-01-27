@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partilha</title>
+  <link rel="stylesheet" href="styles/partilha-style.css">
+</head>
+<body>
+  <header>
+    <h1>Partilha</h1>
+    <nav>
+      <button class="voltar" onclick="window.location.href='index.html'">Voltar</button>
+      <button class="logout" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+  <main>
+    <h2>Criar nova Partilha</h2>
+    <form id="partilha-form">
+      <input type="text" id="share-title" placeholder="Título" required />
+      <textarea id="share-description" placeholder="Descrição" required></textarea>
+      <input type="text" id="share-location" placeholder="Local" required />
+      <input type="date" id="share-date" required />
+      <button type="submit">Salvar</button>
+    </form>
+  </main>
+  <footer>
+    <p>© 2025 Plataforma de Partilha de Fotografias</p>
+  </footer>
+  <script src="./tokenValidation.js"></script>
+  <script>
+    async function createShare() {
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const location = document.getElementById('location').value;
+        const date = document.getElementById('date').value;
+
+        try {
+            const response = await fetch('http://localhost:5001/api/shares/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title, description, location, date }),
+            });
+
+            if (response.ok) {
+            alert('Partilha criada com sucesso!');
+            window.location.reload();
+            } else {
+            const error = await response.json();
+            alert(`Erro ao criar partilha: ${error.error}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao criar partilha.');
+        }
+        }
+
+
+    function logout() {
+      localStorage.removeItem('userToken');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

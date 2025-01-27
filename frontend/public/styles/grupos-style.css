@@ -1,0 +1,139 @@
+/* Geral */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background: linear-gradient(45deg, #007bff, #9bedbc);
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  color: white;
+  flex: 1;
+  text-align: left;
+  padding-left: 20px;
+}
+
+header nav {
+  flex: 1;
+  text-align: right;
+  padding-right: 20px;
+}
+
+header nav button {
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 10px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+header nav button.logout {
+  background: linear-gradient(45deg, #ff4d4d, #ff7f50);
+}
+
+header nav button.logout:hover {
+  background: linear-gradient(45deg, #f97102, #ff0000);
+  transform: scale(1.05);
+}
+
+header nav button.voltar {
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+}
+
+header nav button.voltar:hover {
+  background: linear-gradient(45deg, #0072ff, #00c6ff);
+  transform: scale(1.05);
+}
+
+/* Main Section */
+main {
+  text-align: center;
+  flex: 1;
+  padding: 20px;
+}
+
+main h2 {
+  margin-top: 0;
+  color: #007bff;
+}
+
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.group-item {
+  background: linear-gradient(45deg, #ffffff, #f0f8ff); 
+  padding: 20px;
+  border-radius: 15px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); 
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+.group-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.12); 
+}
+
+.group-item h3 {
+  margin: 0 0 10px; 
+  color: #007bff;
+  font-size: 1.5rem; 
+}
+
+.group-item p {
+  margin: 5px 0;
+  color: #333; 
+  font-size: 1rem;
+}
+
+#create-group-btn {
+  background: linear-gradient(45deg, #007bff, #00c6ff); 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 20px; 
+}
+
+#create-group-btn:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #343a40;
+  color: white;
+  font-size: 0.9rem;
+}
+
+footer p {
+  margin: 0;
+}

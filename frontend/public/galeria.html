@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeria</title>
+  <link rel="stylesheet" href="styles/galeria-style.css">
+</head>
+<body>
+  <header>
+    <h1>Galeria</h1>
+    <nav>
+      <button class="voltar" onclick="window.location.href='index.html'">Voltar</button>
+      <button class="logout" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+  <main>
+    <h2>Adicionar nova Imagem</h2>
+    <form id="galeria-form">
+      <input type="url" id="image-url" placeholder="URL da Imagem" required />
+      <textarea id="image-description" placeholder="Descrição" required></textarea>
+      <button type="submit">Salvar</button>
+    </form>
+  </main>
+  <footer>
+    <p>© 2025 Plataforma de Partilha de Fotografias</p>
+  </footer>
+  <script src="./tokenValidation.js"></script>
+  <script>
+    async function addImage() {
+        const url = document.getElementById('image-url').value;
+        const description = document.getElementById('description').value;
+
+        try {
+            const response = await fetch('http://localhost:5001/api/gallery/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url, description }),
+            });
+
+            if (response.ok) {
+            alert('Imagem adicionada com sucesso!');
+            window.location.reload();
+            } else {
+            const error = await response.json();
+            alert(`Erro ao adicionar imagem: ${error.error}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao adicionar imagem.');
+        }
+        }
+
+
+    function logout() {
+      localStorage.removeItem('userToken');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
