@@ -1,6 +1,7 @@
 const express = require('express');
 const Share = require('../models/share'); 
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 // Criar nova partilha
 router.post('/', async (req, res) => {

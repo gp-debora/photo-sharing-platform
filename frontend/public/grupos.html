@@ -16,34 +16,38 @@
   </header>
   <main>
     <h2>Explore Grupos</h2>
-    <div id="group-list" class="group-list">
-      <!-- Grupos carregados dinamicamente -->
-    </div>
+    <div id="group-list" class="group-list"></div>
     <button id="create-group-btn" onclick="showCreateGroupForm()">Criar Grupo</button>
+
     <div id="create-group-form" style="display: none;">
-      <h3>Criar Novo Grupo</h3>
+      <h3 id="form-title">Criar Novo Grupo</h3>
       <input type="text" id="group-name" placeholder="Nome do Grupo" required />
       <input type="text" id="group-description" placeholder="Descrição" required />
       <input type="text" id="group-location" placeholder="Localização" required />
       <input type="date" id="group-date" required />
-      <button onclick="createGroup()">Salvar</button>
+      <button id="save-group-btn" onclick="createGroup()">Salvar</button>
+      <button id="update-group-btn" onclick="updateGroup()" style="display: none;">Atualizar</button>
     </div>
   </main>
   <footer>
     <p>&copy; 2025 Plataforma de Partilha de Fotografias</p>
   </footer>
-  <script src="./tokenValidation.js"></script>
+
   <script>
+    let editingGroupId = null; // Armazena ID do grupo a ser editado
+    const API_URL = "http://localhost:5001/api/groups//";
+
+    // ✅ Função para buscar grupos
     async function fetchGroups() {
       const token = localStorage.getItem('userToken');
       if (!token) {
-        alert('Por favor, faça login para acessar os grupos.');
+        alert('Por favor, faça login.');
         window.location.href = 'login.html';
         return;
       }
 
       try {
-        const response = await fetch('http://localhost:5001/api/groups', {
+        const response = await fetch(API_URL, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -51,7 +55,7 @@
 
         const groups = await response.json();
         const groupList = document.getElementById('group-list');
-        groupList.innerHTML = ''; 
+        groupList.innerHTML = '';
 
         groups.forEach((group) => {
           const groupItem = document.createElement('div');
@@ -61,60 +65,32 @@
             <p>${group.description}</p>
             <p><strong>Local:</strong> ${group.location}</p>
             <p><strong>Data:</strong> ${new Date(group.date).toLocaleDateString()}</p>
+            <button class="edit-btn" onclick="editGroup('${group._id}', '${group.name}', '${group.description}', '${group.location}', '${group.date}')">Editar</button>
+            <button class="delete-btn" onclick="deleteGroup('${group._id}')">Excluir</button>
           `;
           groupList.appendChild(groupItem);
         });
       } catch (error) {
         console.error(error);
-        alert('Não foi possível carregar os grupos.');
+        alert('Erro ao carregar grupos.');
       }
     }
 
-    // Função para carregar grupos dinamicamente
-    async function fetchGroups() {
-      const token = localStorage.getItem('userToken');
-      if (!token) {
-        alert('Por favor, faça login para acessar os grupos.');
-        window.location.href = 'login.html';
-        return;
-      }
-
-      try {
-        const response = await fetch('API_BASE_URL', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erro ao carregar grupos.');
-        }
-
-        const groups = await response.json();
-        const groupList = document.getElementById('group-list');
-        groupList.innerHTML = ''; 
-
-        groups.forEach(group => {
-          const groupItem = document.createElement('div');
-          groupItem.className = 'group-item';
-          groupItem.innerHTML = `
-            <h3>${group.name}</h3>
-            <p>${group.description}</p>
-            <p><strong>Local:</strong> ${group.location}</p>
-            <p><strong>Data:</strong> ${new Date(group.date).toLocaleDateString()}</p>
-          `;
-          groupList.appendChild(groupItem);
-        });
-      } catch (error) {
-        console.error(error);
-        alert('Não foi possível carregar os grupos.');
-      }
-    }
-
-    // Função para exibir o formulário de criação de grupo
+    // ✅ Função para exibir formulário
     function showCreateGroupForm() {
+      document.getElementById('form-title').innerText = "Criar Novo Grupo";
       document.getElementById('create-group-form').style.display = 'block';
+      document.getElementById('create-group-btn').style.display = 'none'; 
+      document.getElementById('save-group-btn').style.display = 'block';
+      document.getElementById('update-group-btn').style.display = 'none';
+
+      document.getElementById('group-name').value = '';
+      document.getElementById('group-description').value = '';
+      document.getElementById('group-location').value = '';
+      document.getElementById('group-date').value = '';
     }
 
-    // Função para criar um novo grupo
+    // ✅ Criar Grupo
     async function createGroup() {
       const name = document.getElementById('group-name').value;
       const description = document.getElementById('group-description').value;
@@ -123,7 +99,7 @@
       const token = localStorage.getItem('userToken');
 
       try {
-        const response = await fetch('http://localhost:5001/api/groups', {
+        const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -145,14 +121,83 @@
       }
     }
 
-    // Função para logout
-    function logout() {
-      localStorage.removeItem('userToken'); 
-      alert('Você saiu da aplicação!');
-      window.location.href = 'login.html';
+    // ✅ Editar Grupo
+    function editGroup(id, name, description, location, date) {
+      document.getElementById('form-title').innerText = "Editar Grupo";
+      document.getElementById('group-name').value = name;
+      document.getElementById('group-description').value = description;
+      document.getElementById('group-location').value = location;
+      document.getElementById('group-date').value = new Date(date).toISOString().split('T')[0];
+
+      document.getElementById('create-group-form').style.display = 'block';
+      document.getElementById('create-group-btn').style.display = 'none';
+      document.getElementById('save-group-btn').style.display = 'none';
+      document.getElementById('update-group-btn').style.display = 'block';
+
+      editingGroupId = id;
     }
 
-    // Carregar grupos ao carregar a página
+    // ✅ Atualizar Grupo
+    async function updateGroup() {
+      if (!editingGroupId) {
+        alert("Nenhum grupo selecionado para atualização!");
+        return;
+      }
+
+      const name = document.getElementById('group-name').value;
+      const description = document.getElementById('group-description').value;
+      const location = document.getElementById('group-location').value;
+      const date = document.getElementById('group-date').value;
+      const token = localStorage.getItem('userToken');
+
+      try {
+        const response = await fetch(`${API_URL}${editingGroupId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name, description, location, date }),
+        });
+
+        if (response.ok) {
+          alert('Grupo atualizado com sucesso!');
+          window.location.reload();
+        } else {
+          const error = await response.json();
+          alert(`Erro ao atualizar grupo: ${error.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao atualizar grupo.');
+      }
+    }
+
+    // ✅ Excluir Grupo
+    async function deleteGroup(groupId) {
+      const token = localStorage.getItem('userToken');
+      if (!confirm('Deseja excluir este grupo?')) return;
+
+      try {
+        const response = await fetch(`${API_URL}${groupId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          alert('Grupo excluído!');
+          window.location.reload();
+        } else {
+          alert('Erro ao excluir grupo.');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao excluir grupo.');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', fetchGroups);
   </script>
 </body>
